@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+readonly PROGNAME="${0##*/}"
+
+function usage() {
+  cat << EOF
+Usage: ${PROGNAME} [-h] DOMAIN
+Update lighttpd SSL configuration for DOMAIN with certificate from Let's Encrypt.
+
+This is meant to be used as a hook for `certbot-auto renew`.
+EOF
+}
+
+function main() {
+  readonly DOMAIN="$1"
+
+  readonly LETSENCRYPT_PATH="/etc/letsencrypt/live/${DOMAIN}"
+  readonly LIGHTTPD_PATH="/etc/lighttpd/ssl/${DOMAIN}"
+
+  cat "${LETSENCRYPT_PATH}/cert.pem" "${LETSENCRYPT_PATH}/privkey.pem" > "${LIGHTTPD_PATH}/${DOMAIN}.pem"
+  cp "${LETSENCRYPT_PATH}/chain.pem" "${LIGHTTPD_PATH}/ca-certs.pem"
+
+  # this should not be necessary because the folder should already be read-only
+  # but is a nice reminder that these files are sensitive
+  chmod 600 "${LIGHTTPD_PATH}/${DOMAIN}.pem"
+  chmod 600 "${LIGHTTPD_PATH}/ca-certs.pem"
+
+  service lighttpd reload
+}
+
+if [[ -z "$1" || "$1" == "-h" ]]; then
+  usage
+  exit 1
+fi
+
+main "$@"
