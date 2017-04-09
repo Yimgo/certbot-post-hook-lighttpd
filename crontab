@@ -1,0 +1,1 @@
+@hourly certbot-auto renew --post-hook "certbot-post-hook-lighttpd yimgo.fr"
