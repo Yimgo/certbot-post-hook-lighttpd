@@ -1,1 +1,1 @@
-@hourly certbot-auto renew --post-hook "certbot-post-hook-lighttpd yimgo.fr"
+@hourly certbot-auto renew --no-boostrap --post-hook "certbot-post-hook-lighttpd yimgo.fr"
