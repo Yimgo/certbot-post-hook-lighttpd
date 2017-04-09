@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 readonly PROGNAME="${0##*/}"
 
@@ -16,6 +17,8 @@ function main() {
 
   readonly LETSENCRYPT_PATH="/etc/letsencrypt/live/${DOMAIN}"
   readonly LIGHTTPD_PATH="/etc/lighttpd/ssl/${DOMAIN}"
+
+  [[ ! -d "${LETSENCRYPT_PATH}" || ! -d "${LIGHTTPD_PATH}" ]] && exit 1
 
   cat "${LETSENCRYPT_PATH}/cert.pem" "${LETSENCRYPT_PATH}/privkey.pem" > "${LIGHTTPD_PATH}/${DOMAIN}.pem"
   cp "${LETSENCRYPT_PATH}/chain.pem" "${LIGHTTPD_PATH}/ca-certs.pem"
