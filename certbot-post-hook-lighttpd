@@ -8,7 +8,7 @@ function usage() {
 Usage: ${PROGNAME} [-h] DOMAIN
 Update lighttpd SSL configuration for DOMAIN with certificate from Let's Encrypt.
 
-This is meant to be used as a hook for `certbot-auto renew`.
+This is meant to be used as a hook for \`certbot renew\`.
 EOF
 }
 
@@ -28,7 +28,7 @@ function main() {
   chmod 600 "${LIGHTTPD_PATH}/${DOMAIN}.pem"
   chmod 600 "${LIGHTTPD_PATH}/ca-certs.pem"
 
-  service lighttpd reload
+  systemctl restart lighttpd
 }
 
 if [[ -z "$1" || "$1" == "-h" ]]; then
