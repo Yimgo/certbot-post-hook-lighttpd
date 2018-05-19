@@ -5,7 +5,7 @@ readonly PROGNAME="${0##*/}"
 
 function usage() {
   cat << EOF
-Usage: ${PROGNAME} [-h] DOMAIN
+Usage: ${PROGNAME} [-h]
 Update lighttpd SSL configuration for DOMAIN with certificate from Let's Encrypt.
 
 This is meant to be used as a hook for \`certbot renew\`.
@@ -31,9 +31,11 @@ function main() {
   systemctl restart lighttpd
 }
 
-if [[ -z "$1" || "$1" == "-h" ]]; then
+if [[ "$1" == "-h" ]]; then
   usage
   exit 1
 fi
 
-main "$@"
+for domain in $RENEWED_DOMAINS; do
+  main "$domain"
+done
